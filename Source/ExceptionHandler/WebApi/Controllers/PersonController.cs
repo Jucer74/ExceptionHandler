@@ -78,17 +78,10 @@ namespace WebApi.Controllers
         [HttpPost]
         public async Task<ActionResult<Person>> PostPerson(Person person)
         {
-            try
-            {
-                _context.Persons.Add(person);
-                await _context.SaveChangesAsync();
+            _context.Persons.Add(person);
+            await _context.SaveChangesAsync();
 
-                return CreatedAtAction("GetPerson", new { id = person.Id }, person);
-            }
-            catch (Exception ex)
-            {
-                throw new BusinessException($"Error Adding Person:{ex.Message}", ex.InnerException);
-            }
+            return CreatedAtAction("GetPerson", new { id = person.Id }, person);
         }
 
         // DELETE: api/Person/5
