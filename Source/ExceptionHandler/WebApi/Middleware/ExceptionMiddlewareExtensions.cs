@@ -45,7 +45,13 @@ namespace WebApi.Middleware
             var httpStatusCode = GetStatusResponse(exception);
             context.Response.ContentType = "application/json";
             context.Response.StatusCode = (int)httpStatusCode;
+
             var errors = new List<string>() { exception.Message };
+            if (exception.InnerException is not null)
+            {
+                errors.Add(exception.InnerException.Message);
+            }
+
             var errorDetails = new ErrorDetails()
             {
                 ErrorType = ReasonPhrases.GetReasonPhrase(context.Response.StatusCode),

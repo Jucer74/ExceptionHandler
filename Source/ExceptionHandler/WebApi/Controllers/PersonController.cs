@@ -1,7 +1,9 @@
-﻿using Domain.Models;
+﻿using Application.Exceptions;
+using Domain.Models;
 using Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -76,10 +78,17 @@ namespace WebApi.Controllers
         [HttpPost]
         public async Task<ActionResult<Person>> PostPerson(Person person)
         {
-            _context.Persons.Add(person);
-            await _context.SaveChangesAsync();
+            try
+            {
+                _context.Persons.Add(person);
+                await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetPerson", new { id = person.Id }, person);
+                return CreatedAtAction("GetPerson", new { id = person.Id }, person);
+            }
+            catch (Exception ex)
+            {
+                throw new BusinessException($"Error Adding Person:{ex.Message}", ex.InnerException);
+            }
         }
 
         // DELETE: api/Person/5
