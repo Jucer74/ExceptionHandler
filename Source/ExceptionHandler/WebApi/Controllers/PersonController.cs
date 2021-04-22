@@ -62,7 +62,8 @@ namespace WebApi.Controllers
             {
                 if (!PersonExists(id))
                 {
-                    return NotFound();
+                    //return NotFound();
+                    throw new NotFoundException($"Person: {id} Not Found");
                 }
                 else
                 {

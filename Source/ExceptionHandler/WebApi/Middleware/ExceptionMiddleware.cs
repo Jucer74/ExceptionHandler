@@ -35,11 +35,6 @@ namespace WebApi.Middleware
                     throw;
                 }
 
-                if (ex.GetBaseException() is BusinessException)
-                {
-                    ex = ex.GetBaseException();
-                }
-
                 await httpContext.HandleExceptionAsync(ex);
             }
         }
