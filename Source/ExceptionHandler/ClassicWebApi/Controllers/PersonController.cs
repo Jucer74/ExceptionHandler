@@ -2,6 +2,7 @@
 using Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -76,10 +77,17 @@ namespace ClassicWebApi.Controllers
         [HttpPost]
         public async Task<ActionResult<Person>> PostPerson(Person person)
         {
-            _context.Persons.Add(person);
-            await _context.SaveChangesAsync();
+            try
+            {
+                _context.Persons.Add(person);
+                await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetPerson", new { id = person.Id }, person);
+                return CreatedAtAction("GetPerson", new { id = person.Id }, person);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { Error = $"{ex.Message} - {ex.InnerException.Message}" });
+            }
         }
 
         // DELETE: api/Person/5
