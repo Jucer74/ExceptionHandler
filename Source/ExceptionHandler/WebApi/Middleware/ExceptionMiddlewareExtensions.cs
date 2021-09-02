@@ -78,7 +78,12 @@ namespace WebApi.Middleware
         /// <returns>The HttpStatus Code</returns>
         private static HttpStatusCode GetStatusResponse(Exception exception)
         {
-            var nameOfException = exception.GetType().Name;
+            var nameOfException = exception.GetType().BaseType.Name;
+
+            if (nameOfException.Equals("BusinessException"))
+            {
+                nameOfException = exception.GetType().Name;
+            }
 
             return nameOfException switch
             {
