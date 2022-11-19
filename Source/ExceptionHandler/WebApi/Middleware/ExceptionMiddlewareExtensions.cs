@@ -47,10 +47,16 @@ namespace WebApi.Middleware
             context.Response.StatusCode = (int)httpStatusCode;
 
             var errors = new List<string>() { exception.Message };
-            if (exception.InnerException is not null)
+            var innerException = exception;
+            do
             {
-                errors.Add(exception.InnerException.Message);
+                innerException = innerException.InnerException;
+                if (innerException != null)
+                {
+                    errors.Add(innerException.Message);
+                }
             }
+            while (innerException != null);
 
             var errorDetails = new ErrorDetails()
             {
